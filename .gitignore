@@ -1,0 +1,11 @@
+# build artifacts
+demo/minih264_demo
+demo/minih264_demo_plain
+demo/minih264_demo_ab
+demo/out*.h264
+demo/t*.h264
+examples/idf_demo/build/
+examples/idf_demo/sdkconfig
+examples/idf_demo/dependencies.lock
+# local agent state
+.zcode/
