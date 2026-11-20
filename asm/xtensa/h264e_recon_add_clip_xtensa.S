@@ -70,6 +70,7 @@ h264e_recon_add_clip_xtensa:
     ee.vunzip.8     q0, q1            # q0 = 16 像素行主序(q1 = 全 0 丢弃)
     addi    a14, a1, 32
     ee.vst.128.ip   q0, a14, 16
+    nop                              # EE store → CPU load 同步(时序冒险修复)
 
     # ---- AR 拆拷 4 行 ×4B ----
     l32i    a13, a1, 32

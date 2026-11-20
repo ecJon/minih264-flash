@@ -7411,8 +7411,12 @@ static int h264e_transform_sub_quant_dequant_xtensa(const pix_t *inp, const pix_
     t2 = seg_ccount();
     if (h264e_seg_dbg) { s_seg_acc[cid][0] += t1 - t0; s_seg_acc[cid][1] += t2 - t1; }
     int r;
+#if defined(H264E_BISECT_C_QUANT) /* temporary bisect: force C quantize */
+    r = quantize(q, mode, qdat, zmask);
+#else
     r = ((((uintptr_t)q) & 15) == 0) ? quantize_xt(q, mode, qdat, zmask)
                                       : quantize(q, mode, qdat, zmask);
+#endif
     if (h264e_seg_dbg) s_seg_acc[cid][2] += seg_ccount() - t2;
     return r;
 }
@@ -8347,8 +8351,21 @@ H264E_API(void, h264e_denoise_run, (unsigned char *frm, unsigned char *frmprev, 
 #endif
 #if H264E_ENABLE_XTENSA
 /* Xtensa 汇编内核(asm/xtensa 目录):已换装项在此声明原型,表项引用其符号。
- * 每换装一个内核:删上方 alias 一条 + 此处加一条声明 + .S 文件入 SRCS。 */
+ * 每换装一个内核:删上方 alias 一条 + 此处加一条声明 + .S 文件入 SRCS。
+ *
+ * ⚠️ sad8 回退(2026-11-20):EE 版真机实测与 C 参考不位一致——on-chip gate
+ * FAIL 11/60(P 帧决策分歧,详见 demo/README.md),且 nop 同步/单核钉扎后
+ * 单测(4096 随机块)与真机路径结论矛盾,疑仍有未根因的 EE 微时序冒险。
+ * bit-exact 优先:sad8 表项暂回 C 参考(纯 C 运动搜索,功能等价)。
+ * 重新换装:定义 H264E_BISECT_SAD_ASM 启用 asm 原型,并双验证——
+ *   1) demo sadtest(4096 随机块逐位一致)
+ *   2) examples/idf_demo on-chip gate 60/60 PASS
+ */
+#ifdef H264E_BISECT_SAD_ASM
 int h264e_sad_mb_unlaign_8x8_xtensa(const pix_t *a, int a_stride, const pix_t *b, int sad[4]);
+#else
+#define h264e_sad_mb_unlaign_8x8_xtensa h264e_sad_mb_unlaign_8x8
+#endif
 int h264e_transform_sub_quant_dequant_xtensa(const pix_t *inp, const pix_t *pred, int inp_stride, int mode, quant_t *q, const uint16_t *qdat);
 static const vft_t g_vft_xtensa =
 {

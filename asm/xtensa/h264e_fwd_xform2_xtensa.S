@@ -167,6 +167,7 @@ h264e_fwd_xform2_xtensa:
     ee.vst.128.ip   q3, a14, 16      # nbuf+32 = out2
     addi    a14, a1, 176
     ee.vst.128.ip   q5, a14, 16      # nbuf+48 = out3(帧 208 容纳 176+16)
+    nop                              # EE store → CPU load 同步(时序冒险修复)
 
     # A 块:行 j 8B 在 nbuf+16j → outA+8j
     l32i    a13, a1, 128

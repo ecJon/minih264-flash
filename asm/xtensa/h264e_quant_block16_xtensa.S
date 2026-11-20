@@ -62,6 +62,7 @@
     ee.st.qacc_h.l.128.ip a9, 16            # b16-31
     ee.st.qacc_l.h.32.ip  a9, 4             # b32-35
     ee.st.qacc_h.h.32.ip  a9, 4             # b36-39
+    nop                                    # EE store → CPU load 同步(时序冒险修复)
     # ---- L0: v_lo = srli(w0,16)(b2,3);w0 @ 0 ----
     l32i    a10, a5, 0
     srli    a9, a10, 16

@@ -64,6 +64,7 @@ h264e_sad_mb_unlaign_8x8_xtensa:
 
     # TL:accL → [a1] 横和暂存(自身帧,16B 对齐)→ a8
     mov.n   a14, a1             # ⚠️vst.ip 会后递增基址——必须用副本,不能直接 a1
+    nop
     ee.vst.128.ip q5, a14, 16
     l16si   a8,  a1, 0
     l16si   a9,  a1, 2
@@ -83,6 +84,7 @@ h264e_sad_mb_unlaign_8x8_xtensa:
 
     # TR:accR → [a1] → a9
     mov.n   a14, a1
+    nop
     ee.vst.128.ip q3, a14, 16
     l16si   a9,  a1, 0
     l16si   a10, a1, 2
@@ -132,6 +134,7 @@ h264e_sad_mb_unlaign_8x8_xtensa:
 
     # BL:accL → [a1] → a10(a13/a15/a14 轮转,不碰 a8/a9)
     mov.n   a14, a1
+    nop
     ee.vst.128.ip q5, a14, 16
     l16si   a10, a1, 0
     l16si   a13, a1, 2
@@ -151,6 +154,7 @@ h264e_sad_mb_unlaign_8x8_xtensa:
 
     # BR:accR → [a1] → a11
     mov.n   a14, a1
+    nop
     ee.vst.128.ip q3, a14, 16
     l16si   a11, a1, 0
     l16si   a13, a1, 2
