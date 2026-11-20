@@ -1,0 +1,10 @@
+idf_component_register(SRCS "asm/xtensa/simd_probe6.S"
+                            "asm/xtensa/simd_probe7.S"
+                            "asm/xtensa/simd_probe8.S"
+                            "asm/xtensa/simd_probe9.S"
+                            "asm/xtensa/h264e_fwd_xform2_xtensa.S"
+                            "asm/xtensa/h264e_recon_add_clip_xtensa.S"
+                            "asm/xtensa/h264e_copy_rows16_xtensa.S"
+                            "asm/xtensa/h264e_sad_mb_unlaign_8x8_xtensa.S"
+                            "asm/xtensa/h264e_quant_block16_xtensa.S"
+                       INCLUDE_DIRS "include")
